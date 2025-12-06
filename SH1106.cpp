@@ -268,19 +268,19 @@ void SH1106::display(void) {
     SH1106_command(SH1106_SETHIGHCOLUMN | 0x0); // hi col = 0
     SH1106_command(SH1106_SETSTARTLINE | 0x0);  // line #0
 
-    byte height = height();
-    byte width = width();
+    byte _height = height();
+    byte _width = width();
     byte m_row = 0;
     byte m_col = 2;
 
-    height >>= 3;
-    width >>= 3;
+    _height >>= 3;
+    _width >>= 3;
 
     int p = 0;
 
     byte i, j, k = 0;
 
-    for (i = 0; i < height; i++) {
+    for (i = 0; i < _height; i++) {
 
         // send a bunch of data in one xmission
         SH1106_command(0xB0 + i + m_row);    // set page address
@@ -290,7 +290,7 @@ void SH1106::display(void) {
         for (j = 0; j < 8; j++) {
             Wire.beginTransmission(_i2caddr);
             Wire.write(0x40);
-            for (k = 0; k < width; k++, p++) {
+            for (k = 0; k < _width; k++, p++) {
                 Wire.write(buffer[p]);
             }
             Wire.endTransmission();
