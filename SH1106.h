@@ -72,6 +72,8 @@ class SH1106 : public Adafruit_GFX {
 
     void clearDisplay(void);
     void invertDisplay(uint8_t i);
+    void setBrightness(uint8_t b);
+    void blank(bool b);
     void display();
 
     void drawPixel(int16_t x, int16_t y, uint16_t color);

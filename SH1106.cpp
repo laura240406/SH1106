@@ -248,6 +248,33 @@ void SH1106::invertDisplay(uint8_t i) {
     }
 }
 
+void SH1106::setBrightness(uint8_t b) {
+    // b = 0, 0xFF for min, max.
+    // Max is scaled depending on OLED type and _vccstate.
+#if SH1106_LCDWIDTH == 128 && SH1106_LCDHEIGHT == 32
+    SH1106_command(SH1106_SETCONTRAST); // 0x81
+    SH1106_command(0x8F * b / 0xFF);
+#elif SH1106_LCDWIDTH == 128 && SH1106_LCDHEIGHT == 64
+    SH1106_command(SH1106_SETCONTRAST); // 0x81
+    if (_vccstate == SH1106_EXTERNALVCC) {
+        SH1106_command(0x9F * b / 0xFF);
+    } else {
+        SH1106_command(0xCF * b / 0xFF);
+    }
+#elif SH1106_LCDWIDTH == 96 && SH1106_LCDHEIGHT == 16
+    SH1106_command(SH1106_SETCONTRAST); // 0x81
+    if (_vccstate == SH1106_EXTERNALVCC) {
+        SH1106_command(0x10 * b / 0xFF);
+    } else {
+        SH1106_command(0xAF * b / 0xFF);
+    }
+#endif
+}
+
+void SH1106::blank(bool b) {
+    SH1106_command(b ? SH1106_DISPLAYOFF : SH1106_DISPLAYON);
+}
+
 void SH1106::SH1106_command(uint8_t c) {
     Wire.beginTransmission(_i2caddr);
     Wire.write(0x00);
